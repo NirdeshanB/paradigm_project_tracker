@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "789279023544",
+    "project_id": "paradigm-project-tracker",
+    "storage_bucket": "paradigm-project-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789279023544:android:5679ee06fb212caa0bef4d",
+        "android_client_info": {
+          "package_name": "com.example.paradigm_project_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXP6ej4lMIfOPkMs2hNXB2MIua0oXu4k4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
