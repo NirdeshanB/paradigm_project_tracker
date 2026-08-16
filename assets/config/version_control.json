@@ -1,0 +1,11 @@
+{
+  "latestVersion": "1.0.1",
+  "downloadUrl": "https://github.com/NirdeshanB/paradigm_project_tracker/releases",
+  "features": [
+    "Foreground alarm ringtone alerts",
+    "Alarm volume preferences slider",
+    "Dynamic Firestore team filters",
+    "Flicker-free dashboard search typing"
+  ],
+  "isForceUpdate": false
+}

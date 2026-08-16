@@ -13,6 +13,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -342,7 +345,38 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _syncLocalVersionConfig() async {
+    // Only synchronize if running in Debug mode (during local development)
+    if (!kDebugMode) return;
+
+    try {
+      final jsonStr = await rootBundle.loadString('assets/config/version_control.json');
+      final data = json.decode(jsonStr) as Map<String, dynamic>;
+
+      final latest = data['latestVersion'] as String? ?? '1.0.0';
+      final downloadUrl = data['downloadUrl'] as String? ?? '';
+      final features = List<String>.from(data['features'] ?? []);
+      final isForceUpdate = data['isForceUpdate'] as bool? ?? false;
+
+      // Update Firestore config document automatically
+      await FirebaseFirestore.instance
+          .collection('config')
+          .doc('appVersion')
+          .set({
+        'latestVersion': latest,
+        'downloadUrl': downloadUrl,
+        'features': features,
+        'isForceUpdate': isForceUpdate,
+      });
+
+      debugPrint('Sync Alert: Local version_control.json synchronized to Firestore appVersion document.');
+    } catch (e) {
+      debugPrint('Sync Error: Failed to auto-sync local version configuration: $e');
+    }
+  }
+
   void _checkForUpdates() {
+    _syncLocalVersionConfig();
     _updateSubscription = FirebaseFirestore.instance
         .collection('config')
         .doc('appVersion')
