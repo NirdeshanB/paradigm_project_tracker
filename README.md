@@ -10,61 +10,99 @@ An internal CRM and project management mobile application built for **Paradigm D
 
 ## 🚀 Key Premium Features
 
-* **Real-time Synchronization**: Instant client updates, activity log trails, and team edits powered by a reactive Firebase Firestore backbone.
-* **Lag-Free Theme Engine**: Toggle between high-contrast slate-dark mode and borderless clean light mode instantly. Caches lookups and layout frames to guarantee 60/120 FPS transitions.
-* **Targeted Alarms & Reminders**: Real-time foreground alarm checks wake up screens and launch glassmorphic overlays complete with actions to complete or snooze.
+* **Real-time Synchronization**: Client updates, activity log trails, and team edits are fully reactive, powered by a Firebase Firestore backbone.
+* **Lag-Free Theme Engine**: Switch between high-contrast slate-dark mode and borderless clean light mode instantly. Custom fonts are cached locally to guarantee 0ms transition latency.
+* **Targeted Alarms & Reminders**: Real-time foreground alarm checks wake up screens and launch glassmorphic overlays complete with actions to complete or snooze. Alarms trigger **strictly** for the team member assigned to the project.
 * **Audio Alerts & Sound Mixer**: Plays native device looping alarm ringtones when reminder thresholds are reached. Features an inline sound mixer slider inside settings with audio-check preview chirps.
-* **Assignee-Targeted Notifications**: Intelligent filters ensure loud audio alarms trigger strictly for the team member assigned to the project.
 * **In-App Auto Update Checker**: Keeps the entire team on the latest software version automatically. Displays release notes and triggers browser downloads instantly.
-* **Database-Driven Configurations**: Selector options, next action fields, and currency types update reactively from dynamic Firestore document modifications.
+* **Admin Version Control Dashboard**: Enables super admins to deploy new app version metadata straight to Firestore from the app UI.
+* **Database-Driven Configurations**: Selector options, next action fields, and currency types update reactively from Firestore document modifications.
 
 ---
 
-## 🛠️ Technology Stack
+## 🗺️ App Flow & Screen Architecture
 
-* **Framework**: Flutter (Dart SDK)
-* **Backend**: Firebase Auth, Cloud Firestore
-* **Notifications & Audio**: Flutter Ringtone Player (v4.x Plugin API)
-* **Design Guidelines**: Material 3, Custom Typography (Inter & Outfit)
+The application is structured linearly with a clean single-scaffold layout on the home screen to prevent memory leaks and transition lag:
+
+```
+[Login / Reset Password Screen] 
+             │
+             ▼ (Authentication Gate)
+     [Home Screen Scaffold]
+             │
+     ┌───────┼───────┐
+     ▼       ▼       ▼
+[Dashboard] [Activity] [Settings]
+     │               │
+     │               ├─► [Edit Profile Screen]
+     │               ├─► [Add Team Member Screen]
+     │               └─► [Publish Update Modal]
+     ▼
+[Project Details Screen] 
+     │
+     └─► [Delete / Complete / Snooze Alerts]
+```
+
+* **AuthGate**: Inspects active firebase auth states. If logged out, directs to `LoginScreen`. If logged in, boots the `HomeScreen`.
+* **HomeScreen**: Acts as the main scaffold holding the dynamic `BottomNav`. It also hosts the background timer checking for due alarms and version update events.
+* **DashboardScreen**: Renders project cards, status metric chips, interactive search filters, and active team member selector filters.
+* **SettingsScreen**: Hosts user profiles, theme toggles, alarm volume sliders, and super admin controls.
 
 ---
 
-## 📦 Automating Team Version Updates (CI/CD Releases)
+## 📦 Key Dependencies & Packages
 
-Instead of manually sending updated APKs to team members, the application utilizes a Firestore-driven **In-App Update Checker**:
+| Package | Version | Purpose |
+| :--- | :--- | :--- |
+| `firebase_core` / `cloud_firestore` | `^3.1.0` | Powers the real-time database backbone and syncing. |
+| `firebase_auth` | `^5.1.0` | Handles user authentication and secure logins. |
+| `flutter_ringtone_player` | `^4.0.0` | Plays looping system alarms and sound check preview chirps. |
+| `provider` | `^6.1.2` | Manages global states (theme switches, alarm volume settings). |
+| `url_launcher` | `^6.3.0` | Opens GitHub release pages in the default system browser. |
+| `google_fonts` | `^6.2.1` | Renders typography (Inter, Outfit) premium font styles. |
 
-1. Compile the updated release APK:
+---
+
+## 📝 STEP-BY-STEP: How to Publish an App Update (Reference Guide)
+
+Follow these exact steps whenever you make changes and want to share a new build (e.g. `1.0.2`) with your team:
+
+### Step 1: Update the Local Version Constants
+1. Open the file [`assets/config/version_control.json`](file:///d:/studio_projects/paradigm_project_tracker/assets/config/version_control.json) and change `latestVersion` to the new version:
+   ```json
+   {
+     "latestVersion": "1.0.2",
+     "downloadUrl": "https://github.com/NirdeshanB/paradigm_project_tracker/releases",
+     "features": [
+       "Feature description line 1",
+       "Feature description line 2"
+     ],
+     "isForceUpdate": false
+   }
+   ```
+2. Open [`lib/theme/app_theme.dart`](file:///d:/studio_projects/paradigm_project_tracker/lib/theme/app_theme.dart) and update line 7 to match:
+   ```dart
+   static const String appVersion = '1.0.2';
+   ```
+
+### Step 2: Push Update to the Database (Firestore Sync)
+1. Run the app locally on your computer in **Debug Mode** (e.g. run `flutter run` on your terminal or press Start in your IDE).
+2. As soon as the app launches, it reads the local `version_control.json` file and automatically synchronizes the new metadata (version `1.0.2`, download URL, features) straight into your Firestore `/config/appVersion` database. 
+3. *Note: You will see a debug log confirming the sync: `Sync Alert: Local version_control.json synchronized to Firestore appVersion document.`*
+
+### Step 3: Build & Publish on GitHub
+1. Compile the clean release build APK:
    ```bash
    flutter build apk --release
    ```
-2. Upload the APK binary to your GitHub releases repository.
-3. Update the Firestore configurations document:
-   * **Path**: `/config/appVersion`
-   * **Schema**:
-     ```json
-     {
-       "latestVersion": "1.0.1",
-       "downloadUrl": "https://github.com/NirdeshanB/paradigm_project_tracker/releases/download/v1.0.1/app-release.apk",
-       "features": [
-         "Targeted user alarm reminders support",
-         "Sound volume mixer preferences slider",
-         "Optimized MaterialApp rebuild loops"
-       ],
-       "isForceUpdate": false
-     }
-     ```
-4. Active user applications will immediately present a non-intrusive dialog prompt containing release notes and direct download actions.
+2. Push your final code changes to GitHub:
+   ```bash
+   git add .
+   git commit -m "Bump version to 1.0.2 and add new features"
+   git push origin main
+   ```
+3. Go to your private GitHub repository on the web, click **Releases -> Create a new release**, upload your compiled APK (`build/app/outputs/flutter-apk/app-release.apk`), and tag it `v1.0.2`.
 
 ---
 
-## 🏁 Getting Started & Execution
-
-1. Configure Flutter SDK (>= 3.2.0) on your local environment.
-2. Fetch package dependencies:
-   ```bash
-   flutter pub get
-   ```
-3. Launch on a connected Android/iOS target:
-   ```bash
-   flutter run
-   ```
+**Result**: Any teammates running older versions of the app (e.g. `1.0.1` or `1.0.0`) will immediately receive the update notification on their screens!

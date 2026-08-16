@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static const String _interFamily = 'Inter';
   static const String _outfitFamily = 'Outfit';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.0.1';
   // ─────────────────────────────
   // Colors
   // ─────────────────────────────
@@ -44,7 +44,8 @@ class AppTheme {
   // Light Theme
   // ─────────────────────────────
   static ThemeData get light {
-    final baseTextTheme = ThemeData.light().textTheme.apply(fontFamily: _interFamily);
+    final baseTextTheme =
+        ThemeData.light().textTheme.apply(fontFamily: _interFamily);
 
     return ThemeData(
       useMaterial3: true,
@@ -71,70 +72,83 @@ class AppTheme {
 
       // Typography
       textTheme: baseTextTheme.copyWith(
-        displayLarge: TextStyle(fontFamily: _outfitFamily, 
+        displayLarge: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: textPrimary,
           letterSpacing: -0.5,
         ),
-        headlineLarge: TextStyle(fontFamily: _outfitFamily, 
+        headlineLarge: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 26,
           fontWeight: FontWeight.bold,
           color: textPrimary,
           letterSpacing: -0.5,
         ),
-        headlineMedium: TextStyle(fontFamily: _outfitFamily, 
+        headlineMedium: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
-        headlineSmall: TextStyle(fontFamily: _outfitFamily, 
+        headlineSmall: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
-        titleLarge: TextStyle(fontFamily: _outfitFamily, 
+        titleLarge: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
-        titleMedium: TextStyle(fontFamily: _outfitFamily, 
+        titleMedium: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 15,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
-        titleSmall: TextStyle(fontFamily: _interFamily, 
+        titleSmall: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: textPrimary,
         ),
-        bodyLarge: TextStyle(fontFamily: _interFamily, 
+        bodyLarge: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: textPrimary,
         ),
-        bodyMedium: TextStyle(fontFamily: _interFamily, 
+        bodyMedium: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: textSecondary,
         ),
-        bodySmall: TextStyle(fontFamily: _interFamily, 
+        bodySmall: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: textMuted,
         ),
-        labelLarge: TextStyle(fontFamily: _interFamily, 
+        labelLarge: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
-        labelMedium: TextStyle(fontFamily: _interFamily, 
+        labelMedium: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: textSecondary,
           letterSpacing: 0.4,
         ),
-        labelSmall: TextStyle(fontFamily: _interFamily, 
+        labelSmall: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 11,
           fontWeight: FontWeight.w500,
           color: textMuted,
@@ -147,7 +161,8 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: TextStyle(fontFamily: _outfitFamily, 
+        titleTextStyle: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: textPrimary,
@@ -172,11 +187,13 @@ class AppTheme {
         fillColor: surface,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        hintStyle: TextStyle(fontFamily: _interFamily, 
+        hintStyle: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 14,
           color: textMuted.withValues(alpha: 0.7),
         ),
-        labelStyle: TextStyle(fontFamily: _interFamily, 
+        labelStyle: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: textSecondary,
@@ -214,7 +231,8 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: TextStyle(fontFamily: _outfitFamily, 
+          textStyle: TextStyle(
+            fontFamily: _outfitFamily,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -225,7 +243,8 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primary,
-          textStyle: TextStyle(fontFamily: _interFamily, 
+          textStyle: TextStyle(
+            fontFamily: _interFamily,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -263,7 +282,8 @@ class AppTheme {
       // SnackBar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: textPrimary,
-        contentTextStyle: TextStyle(fontFamily: _interFamily, color: Colors.white),
+        contentTextStyle:
+            TextStyle(fontFamily: _interFamily, color: Colors.white),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
       ),
@@ -274,10 +294,11 @@ class AppTheme {
   // Dark Theme (Premium slate design)
   // ─────────────────────────────
   static ThemeData get dark {
-    final baseTextTheme = ThemeData.dark().textTheme.apply(fontFamily: _interFamily);
+    final baseTextTheme =
+        ThemeData.dark().textTheme.apply(fontFamily: _interFamily);
     const darkBackground = Color(0xFF0F172A); // slate-900
-    const darkSurface = Color(0xFF1E293B);    // slate-800
-    const darkBorder = Color(0xFF334155);     // slate-700
+    const darkSurface = Color(0xFF1E293B); // slate-800
+    const darkBorder = Color(0xFF334155); // slate-700
     const darkTextPrimary = Color(0xFFF8FAFC);
     const darkTextSecondary = Color(0xFF94A3B8);
     const darkTextMuted = Color(0xFF64748B);
@@ -309,70 +330,83 @@ class AppTheme {
 
       // Typography
       textTheme: baseTextTheme.copyWith(
-        displayLarge: TextStyle(fontFamily: _outfitFamily, 
+        displayLarge: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 32,
           fontWeight: FontWeight.bold,
           color: darkTextPrimary,
           letterSpacing: -0.5,
         ),
-        headlineLarge: TextStyle(fontFamily: _outfitFamily, 
+        headlineLarge: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 26,
           fontWeight: FontWeight.bold,
           color: darkTextPrimary,
           letterSpacing: -0.5,
         ),
-        headlineMedium: TextStyle(fontFamily: _outfitFamily, 
+        headlineMedium: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 22,
           fontWeight: FontWeight.w600,
           color: darkTextPrimary,
         ),
-        headlineSmall: TextStyle(fontFamily: _outfitFamily, 
+        headlineSmall: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: darkTextPrimary,
         ),
-        titleLarge: TextStyle(fontFamily: _outfitFamily, 
+        titleLarge: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: darkTextPrimary,
         ),
-        titleMedium: TextStyle(fontFamily: _outfitFamily, 
+        titleMedium: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 15,
           fontWeight: FontWeight.w600,
           color: darkTextPrimary,
         ),
-        titleSmall: TextStyle(fontFamily: _interFamily, 
+        titleSmall: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: darkTextPrimary,
         ),
-        bodyLarge: TextStyle(fontFamily: _interFamily, 
+        bodyLarge: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: darkTextPrimary,
         ),
-        bodyMedium: TextStyle(fontFamily: _interFamily, 
+        bodyMedium: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 14,
           fontWeight: FontWeight.w400,
           color: darkTextSecondary,
         ),
-        bodySmall: TextStyle(fontFamily: _interFamily, 
+        bodySmall: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: darkTextMuted,
         ),
-        labelLarge: TextStyle(fontFamily: _interFamily, 
+        labelLarge: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: darkTextPrimary,
         ),
-        labelMedium: TextStyle(fontFamily: _interFamily, 
+        labelMedium: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: darkTextSecondary,
           letterSpacing: 0.4,
         ),
-        labelSmall: TextStyle(fontFamily: _interFamily, 
+        labelSmall: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 11,
           fontWeight: FontWeight.w500,
           color: darkTextMuted,
@@ -385,7 +419,8 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: TextStyle(fontFamily: _outfitFamily, 
+        titleTextStyle: TextStyle(
+          fontFamily: _outfitFamily,
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: darkTextPrimary,
@@ -410,11 +445,13 @@ class AppTheme {
         fillColor: darkSurface,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        hintStyle: TextStyle(fontFamily: _interFamily, 
+        hintStyle: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 14,
           color: darkTextMuted,
         ),
-        labelStyle: TextStyle(fontFamily: _interFamily, 
+        labelStyle: TextStyle(
+          fontFamily: _interFamily,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: darkTextSecondary,
@@ -452,7 +489,8 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: TextStyle(fontFamily: _outfitFamily, 
+          textStyle: TextStyle(
+            fontFamily: _outfitFamily,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -463,7 +501,8 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryLight,
-          textStyle: TextStyle(fontFamily: _interFamily, 
+          textStyle: TextStyle(
+            fontFamily: _interFamily,
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -501,7 +540,8 @@ class AppTheme {
       // SnackBar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: darkSurface,
-        contentTextStyle: TextStyle(fontFamily: _interFamily, color: darkTextPrimary),
+        contentTextStyle:
+            TextStyle(fontFamily: _interFamily, color: darkTextPrimary),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
       ),
