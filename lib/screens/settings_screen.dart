@@ -13,6 +13,7 @@ import '../services/project_service.dart';
 import 'add_user_screen.dart';
 import 'edit_profile_screen.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -259,6 +260,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               );
                             },
+                          ),
+                          _SettingsTile(
+                            icon: '🚀',
+                            title: 'App Version Control',
+                            onTap: () => _showVersionControlDialog(context),
                           ),
                         ],
 
@@ -507,6 +513,190 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 );
               },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showVersionControlDialog(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final formKey = GlobalKey<FormState>();
+    final versionController = TextEditingController(text: '1.0.1');
+    final urlController = TextEditingController(
+        text: 'https://github.com/NirdeshanB/paradigm_project_tracker/releases');
+    final featuresController = TextEditingController(
+        text: 'Added alarm volume mixer controls\nFlicker-free dashboard search\nDynamic user reminder filters');
+    bool forceUpdate = false;
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: theme.cardColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: const Text(
+                'Publish App Update',
+                style: TextStyle(
+                  fontFamily: 'Outfit',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Current Codebase Version: v${AppTheme.appVersion}',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          color: isDark ? const Color(0xFF94A3B8) : AppTheme.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: versionController,
+                        style: TextStyle(color: theme.textTheme.bodyLarge?.color),
+                        decoration: InputDecoration(
+                          labelText: 'NEW VERSION',
+                          labelStyle: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          hintText: 'e.g. 1.0.1',
+                        ),
+                        validator: (v) => v == null || v.trim().isEmpty ? 'Version is required' : null,
+                      ),
+                      const SizedBox(height: 14),
+                      TextFormField(
+                        controller: urlController,
+                        style: TextStyle(color: theme.textTheme.bodyLarge?.color),
+                        decoration: InputDecoration(
+                          labelText: 'DOWNLOAD URL (APK)',
+                          labelStyle: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          hintText: 'Link to APK binary',
+                        ),
+                        validator: (v) => v == null || v.trim().isEmpty ? 'URL is required' : null,
+                      ),
+                      const SizedBox(height: 14),
+                      TextFormField(
+                        controller: featuresController,
+                        maxLines: 3,
+                        style: TextStyle(color: theme.textTheme.bodyLarge?.color),
+                        decoration: InputDecoration(
+                          labelText: 'RELEASE NOTES (ONE PER LINE)',
+                          labelStyle: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          hintText: 'Line 1\nLine 2',
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      SwitchListTile(
+                        title: const Text(
+                          'Force Update',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: const Text(
+                          'Locks user app until updated',
+                          style: TextStyle(fontSize: 11),
+                        ),
+                        value: forceUpdate,
+                        onChanged: (val) {
+                          setDialogState(() {
+                            forceUpdate = val;
+                          });
+                        },
+                        activeColor: theme.colorScheme.primary,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      color: isDark ? const Color(0xFF94A3B8) : AppTheme.textSecondary,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (formKey.currentState?.validate() ?? false) {
+                      final newVer = versionController.text.trim();
+                      final url = urlController.text.trim();
+                      final feats = featuresController.text
+                          .split('\n')
+                          .map((s) => s.trim())
+                          .where((s) => s.isNotEmpty)
+                          .toList();
+
+                      Navigator.pop(ctx);
+                      
+                      final messenger = ScaffoldMessenger.of(context);
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection('config')
+                            .doc('appVersion')
+                            .set({
+                          'latestVersion': newVer,
+                          'downloadUrl': url,
+                          'features': feats,
+                          'isForceUpdate': forceUpdate,
+                        });
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'App update v$newVer published! Teammates will receive alert notifications instantly.'),
+                          ),
+                        );
+                      } catch (e) {
+                        messenger.showSnackBar(
+                          SnackBar(content: Text('Failed to publish update: $e')),
+                        );
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'Publish',
+                    style: TextStyle(
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             );
           },
         );

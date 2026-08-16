@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   static const String _interFamily = 'Inter';
   static const String _outfitFamily = 'Outfit';
+  static const String appVersion = '1.0.0';
   // ─────────────────────────────
   // Colors
   // ─────────────────────────────

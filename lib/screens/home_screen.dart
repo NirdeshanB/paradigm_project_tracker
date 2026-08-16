@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Set<String> _shownAlertKeys = {};
   bool _isAlarmShowing = false;
 
-  static const String _currentVersion = '1.0.0';
+  static const String _currentVersion = AppTheme.appVersion;
   StreamSubscription? _updateSubscription;
 
   final List<Widget> _views = const [
